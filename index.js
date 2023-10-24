@@ -1,6 +1,7 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
 const path = require('path');
+const connection = require('./config/connection');
 
 const questions = [{
     type: "list",
