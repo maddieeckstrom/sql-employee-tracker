@@ -16,3 +16,13 @@ const questions = [{
         "Update an employee role"
     ]
 }]
+
+// a function to initialize app
+function init() {
+    inquirer.prompt(questions).then((answers) => {
+        
+    })
+}
+
+// calling the function to initialize the app
+init();
