@@ -1,16 +1,10 @@
 USE employee_tracker;
 
 INSERT INTO department(task)
-VALUES(
-
-);
+VALUES(""), ("");
 
 INSERT INTO role(task)
-VALUES(
-
-);
+VALUES(""), (""), (""), ("");
 
 INSERT INTO employee(task)
-VALUES(
-
-);
+VALUES(""), (""), (""), (""), ("");
