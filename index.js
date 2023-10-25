@@ -26,6 +26,14 @@ function viewMenu() {
             viewAllRoles();
         } else if(answers.menuChoice === "View all employees") {
             viewAllEmployees();
+        } else if(answers.menuChoice === "Add a department") {
+            addDepartment();
+        } else if(answers.menuChoice === "Add a role") {
+            addRole();
+        } else if(answers.menuChoice === "Add an employee") {
+            addEmployee();
+        } else if(answers.menuChoice === "Update an employee role") {
+            updateEmployeeRole();
         }
     })
 }
@@ -46,6 +54,22 @@ async function viewAllEmployees() {
     const query = "SELECT * FROM employee;";
     const [rows] =  await connection.query(query)
     console.log(rows);
+}
+
+function addDepartment() {
+
+}
+
+function addRole() {
+
+}
+
+function addEmployee() {
+
+}
+
+function updateEmployeeRole() {
+
 }
 
 // calling the function to initialize the app
