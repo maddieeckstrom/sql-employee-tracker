@@ -1,5 +1,6 @@
 const inquirer = require('inquirer');
 const connection = require('./config/connection');
+const cTable = require('console.table');
 
 const menu = [{
     type: "list",
@@ -32,20 +33,6 @@ const addRoleMenu = [{
     message: "Enter the numerical ID for the department the new role is in"
 }]
 
-const addEmployeeMenu = [{
-    name: "employeeFirstName",
-    message: "Enter the first name of the new employee"
-}, {
-    name: "employeeLastName",
-    message: "Enter the last name of the new employee"
-}, {
-    name: "employeeRole",
-    message: "Enter the numerical ID for the role the new employee is in"
-}, {
-    name: "employeeManager",
-    message: "Please enter the numerical ID for the manager of the new employee"
-}]
-
 // a function to initialize app
 function viewMenu() {
     inquirer.prompt(menu).then((answers) => {
@@ -70,19 +57,19 @@ function viewMenu() {
 async function viewAllDepartments() {
     const query = "SELECT * FROM department;";
     const [rows] =  await connection.query(query)
-    console.log(rows);
+    console.table(rows);
 }
 
 async function viewAllRoles() {
     const query = "SELECT * FROM role;";
     const [rows] =  await connection.query(query)
-    console.log(rows);
+    console.table(rows);
 }
 
 async function viewAllEmployees() {
     const query = "SELECT * FROM employee;";
     const [rows] =  await connection.query(query)
-    console.log(rows);
+    console.table(rows);
 }
 
 function newDepartment() {
@@ -94,7 +81,8 @@ function newDepartment() {
 async function addDepartment(answers) {
     const query = `INSERT INTO department (name) VALUES ("${answers.addDepartment}");`;
     const [rows] =  await connection.query(query)
-    console.log(rows);
+    await viewAllDepartments();
+    viewMenu();
 }
 
 function newRole() {
@@ -103,29 +91,64 @@ function newRole() {
     })
 }
 
-//should it be add to instead of insert into?
 async function addRole(answers) {
     const query = `INSERT INTO role (title, salary, department_id) VALUES ("${answers.roleName}", ${answers.roleSalary}, ${answers.roleDepartment});`;
     const [rows] =  await connection.query(query)
-    console.log(rows);
+    await viewAllRoles();
+    viewMenu();
 }
 
-function newEmployee() {
-    inquirer.prompt(addEmployeeMenu).then((answers) => {
+async function newEmployee() {
+    const query = "SELECT * FROM role;";
+    const [rows] =  await connection.query(query);
+    const employeeQuery = "SELECT * FROM employee;";
+    const [employeeRows] =  await connection.query(employeeQuery);
+
+    inquirer.prompt([{
+        name: "employeeFirstName",
+        message: "Enter the first name of the new employee"
+    }, {
+        name: "employeeLastName",
+        message: "Enter the last name of the new employee"
+    }, {
+        type: "list",
+        name: "employeeRole",
+        message: "Enter the role the new employee is in",
+        choices: rows.map(role => {
+            return {
+                name: role.title,
+                value: role.id
+            }
+        })
+    }, {
+        type: "list",
+        name: "employeeManager",
+        message: "Please enter the manager of the new employee",
+        choices: employeeRows.map(employee => {
+            return {
+                name: employee.first_name + " " + employee.last_name,
+                value: employee.id
+            }
+        })
+    }]).then((answers) => {
         addEmployee(answers);
     })
 }
 
 async function addEmployee(answers) {
-    const query = `INSERT INTO role (first_name, last_name, role_id, manager_id) VALUES ("${answers.employeeFirstName}", ${answers.employeeLastName}, ${answers.employeeRole},  ${answers.employeeManager});`;
+    const query = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ("${answers.employeeFirstName}", "${answers.employeeLastName}", ${answers.employeeRole},  ${answers.employeeManager});`;
     const [rows] =  await connection.query(query)
     console.log(rows);
+    await viewAllEmployees();
+    viewMenu();
 }
 
 // WHEN I choose to update an employee role
 // THEN I am prompted to select an employee to update and their new role and this information is updated in the database
 function updateEmployeeRole() {
-
+// see list of all emloyees
+// once I'm given that list, then I need an option of what I want to update
+// 
 }
 
 // calling the function to initialize the app
