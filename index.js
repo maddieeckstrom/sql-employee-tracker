@@ -16,10 +16,39 @@ const menu = [{
     ]
 }]
 
+const addDepartmentMenu = [{
+    name: "addDepartment",
+    message: "Enter the name of the new department"
+}]
+
+const addRoleMenu = [{
+    name: "roleName",
+    message: "Enter the name of the new role"
+}, {
+    name: "roleSalary",
+    message: "Enter the salary for the new role, in decimal format"
+}, {
+    name: "roleDepartment",
+    message: "Enter the numerical ID for the department the new role is in"
+}]
+
+const addEmployeeMenu = [{
+    name: "employeeFirstName",
+    message: "Enter the first name of the new employee"
+}, {
+    name: "employeeLastName",
+    message: "Enter the last name of the new employee"
+}, {
+    name: "employeeRole",
+    message: "Enter the numerical ID for the role the new employee is in"
+}, {
+    name: "employeeManager",
+    message: "Please enter the numerical ID for the manager of the new employee"
+}]
+
 // a function to initialize app
 function viewMenu() {
     inquirer.prompt(menu).then((answers) => {
-       // make if statements for each table
         if(answers.menuChoice === "View all departments") {
             viewAllDepartments();
         } else if(answers.menuChoice === "View all roles") {
@@ -27,11 +56,11 @@ function viewMenu() {
         } else if(answers.menuChoice === "View all employees") {
             viewAllEmployees();
         } else if(answers.menuChoice === "Add a department") {
-            addDepartment();
+            newDepartment();
         } else if(answers.menuChoice === "Add a role") {
-            addRole();
+            newRole();
         } else if(answers.menuChoice === "Add an employee") {
-            addEmployee();
+            newEmployee();
         } else if(answers.menuChoice === "Update an employee role") {
             updateEmployeeRole();
         }
@@ -56,18 +85,45 @@ async function viewAllEmployees() {
     console.log(rows);
 }
 
-function addDepartment() {
-
+function newDepartment() {
+    inquirer.prompt(addDepartmentMenu).then((answers) => {
+        addDepartment(answers);
+    })
 }
 
-function addRole() {
-
+async function addDepartment(answers) {
+    const query = `INSERT INTO department (name) VALUES ("${answers.addDepartment}");`;
+    const [rows] =  await connection.query(query)
+    console.log(rows);
 }
 
-function addEmployee() {
-
+function newRole() {
+    inquirer.prompt(addRoleMenu).then((answers) => {
+        addRole(answers);
+    })
 }
 
+//should it be add to instead of insert into?
+async function addRole(answers) {
+    const query = `INSERT INTO role (title, salary, department_id) VALUES ("${answers.roleName}", ${answers.roleSalary}, ${answers.roleDepartment});`;
+    const [rows] =  await connection.query(query)
+    console.log(rows);
+}
+
+function newEmployee() {
+    inquirer.prompt(addEmployeeMenu).then((answers) => {
+        addEmployee(answers);
+    })
+}
+
+async function addEmployee(answers) {
+    const query = `INSERT INTO role (first_name, last_name, role_id, manager_id) VALUES ("${answers.employeeFirstName}", ${answers.employeeLastName}, ${answers.employeeRole},  ${answers.employeeManager});`;
+    const [rows] =  await connection.query(query)
+    console.log(rows);
+}
+
+// WHEN I choose to update an employee role
+// THEN I am prompted to select an employee to update and their new role and this information is updated in the database
 function updateEmployeeRole() {
 
 }
