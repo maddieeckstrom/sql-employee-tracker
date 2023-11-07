@@ -145,7 +145,24 @@ async function addEmployee(answers) {
 
 // WHEN I choose to update an employee role
 // THEN I am prompted to select an employee to update and their new role and this information is updated in the database
-function updateEmployeeRole() {
+async function updateEmployeeRole() {
+    const employeeQuery = "SELECT * FROM employee;";
+    const [employeeRows] =  await connection.query(employeeQuery);
+
+    inquirer.prompt({[
+        type: "list",
+        name: "employeeUpdate",
+        message: "Which employee would you like to update?",
+        choices: employeeRows.map(employee => {
+            return {
+                name: employee.first_name + " " + employee.last_name,
+                value: employee.id
+            }
+        })
+    ]}).then((answers) => {
+        addEmployee(answers);
+    })
+
 // see list of all emloyees
 // once I'm given that list, then I need an option of what I want to update
 // 
