@@ -143,13 +143,13 @@ async function addEmployee(answers) {
     viewMenu();
 }
 
-// WHEN I choose to update an employee role
-// THEN I am prompted to select an employee to update and their new role and this information is updated in the database
 async function updateEmployeeRole() {
     const employeeQuery = "SELECT * FROM employee;";
     const [employeeRows] =  await connection.query(employeeQuery);
+    const roleQuery = "SELECT * FROM role;";
+    const [roleRows] = await connection.query(roleQuery);
 
-    inquirer.prompt({[
+    inquirer.prompt([{
         type: "list",
         name: "employeeUpdate",
         message: "Which employee would you like to update?",
@@ -159,13 +159,27 @@ async function updateEmployeeRole() {
                 value: employee.id
             }
         })
-    ]}).then((answers) => {
-        addEmployee(answers);
+    }, {
+        type: "list",
+        name: "employeeNewRole",
+        message: "What is the name of the new role for this employee?",
+        choices: roleRows.map(role => {
+            return {
+                name: role.title,
+                value: role.id
+            }
+        })
+    }]).then((answers) => {
+        updateNewRole(answers);
     })
+}
 
-// see list of all emloyees
-// once I'm given that list, then I need an option of what I want to update
-// 
+async function updateNewRole(answers) {
+    const query = `UPDATE employee SET role_id = ${answers.employeeNewRole} WHERE id = ${answers.employeeUpdate}`;
+    const [rows] =  await connection.query(query)
+    console.log(rows);
+    await viewAllEmployees();
+    viewMenu();
 }
 
 // calling the function to initialize the app

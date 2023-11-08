@@ -10,6 +10,9 @@ To run this project, the user needs to install package.json using the terminal c
 
 ## Usage
 
+Link to a demonstration of this project and its uses:
+https://drive.google.com/file/d/1l5wAMrMlNLwKtMhfYUb_a6fFOYYK4fmm/view 
+
 To use the application, the user must type the command "node index.js" into the terminal. They will then see a quesion prompt, "What would you like to do?" The user may navigate through these answer options by using the up and down arrows, then press the enter button for the action they would like to do. This is shown in screenshot 1, link below.
 
 ![Screenshot 1](./images/screenshot-1.png)
